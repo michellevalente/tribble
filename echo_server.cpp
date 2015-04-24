@@ -8,7 +8,7 @@ int main() {
     Socket wsock(8080);
 
     while (true) {
-        Socket sock = wsock.acpt();
+        Socket sock = wsock.accept();
 
         while(true) {
             error_code error;
