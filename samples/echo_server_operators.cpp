@@ -1,5 +1,5 @@
 #include <iostream>
-#include "tribble.h"
+#include "../src/tribble.h"
 
 //using namespace std;
 //using namespace tribble;
@@ -10,7 +10,7 @@ int main() {
     while (true) {
         StreamSocket sock = wsock.accept();
 
-        cout<<"  Connection established with "<<sock.getPeerAddress()<<endl; 
+        //cout<<"  Connection established with "<<sock.getPeerAddress()<<endl; 
 
         string rcvd;
 
