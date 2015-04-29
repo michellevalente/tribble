@@ -9,14 +9,11 @@ int main() {
 
     while (true) {
         StreamSocket sock = wsock.accept();
-        while(true) {
-            error_code error;
-            string rcvd = sock.receive(1024, error);
-            // if (error = error::eof)
-                // break;
-            sock.send_all(rcvd);
-        }
+        string rcvd;
+
+        while(sock >> rcvd) 
+            sock << "Starting to echo\n" << rcvd << "Finishing echo\n";
     }
-    
+
     return 0;
 }
