@@ -26,3 +26,9 @@
 *.exe
 *.out
 *.app
+
+# Idea files
+.idea/
+
+# Generated doxyfile docs
+html/

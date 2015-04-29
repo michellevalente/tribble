@@ -327,7 +327,7 @@ void DatagramSocket::sendTo(string message, HostAddr &client){
             printf("ERROR: %s , errno %d\n", strerror(tmp), tmp);
             printf("while sending to port %d\n", client.getPort());
         }
-        if (i < 1) 
+        if (i < 1)
             throw NetworkException("Send message error.");
         
         ptr += i;
