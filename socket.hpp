@@ -10,7 +10,6 @@
 #include <string>
 #include <system_error>
 #include "error.hpp"
-
 #include "HostAddr.hpp"
 
 using namespace std;
@@ -282,21 +281,20 @@ DatagramSocket::DatagramSocket(uint16_t port_number) {
 
 string DatagramSocket::receiveFrom(int buffer_size, HostAddr &client){
     struct sockaddr_in clientAddr;
-    socklen_t len;
+    socklen_t len = sizeof(clientAddr);
     char* addr;
     char* buffer = new char[buffer_size+1];
 
-    int sz = recvfrom(c_socket, buffer, buffer_size, 0,(struct sockaddr *)&clientAddr, &len);
-    int tmp = errno;
-    if (tmp < 0)
-        printf("ERROR: %s , errno %d\n", strerror(tmp), tmp);
+    int sz = recvfrom(c_socket, buffer, buffer_size, 0, (struct sockaddr *)&clientAddr, &len);
+    // int tmp = errno;
+    // if (tmp < 0)
+    //     printf("ERROR: %s , errno %d\n", strerror(tmp), tmp);
 
 
     buffer[sz] = '\0';
     string str(buffer);
     delete[] buffer;
- 
-    //cout << endl;
+
     client.setPort(ntohs(clientAddr.sin_port));
     addr = inet_ntoa(clientAddr.sin_addr);
     client.setIp(string(addr));

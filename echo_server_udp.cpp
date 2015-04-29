@@ -7,8 +7,7 @@ int main()
    HostAddr client;
    string message;
    
-   for(;;)
-   {
+   for(;;) {
       message = sock.receiveFrom(1024, client);
       cout << "msg: " << message << endl;
       sock.sendTo(message, client);
