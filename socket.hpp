@@ -283,10 +283,11 @@ void DatagramSocket::sendTo(string message, HostAddr &client){
         length -= i;
     }
 }
-
+/*
 Broadcast::Broadcast(uint16_t port_number) : DatagramSocket(port_number)
 {
     int broadcast_on = 1;
     setsockopt(SD, SOL_SOCKET, SO_BROADCAST, &broadcast_on, sizeof(broadcast_on));
 }
+*/
 #endif
