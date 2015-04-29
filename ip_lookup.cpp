@@ -1,9 +1,6 @@
 #include <iostream>
 #include "tribble.h"
 
-using namespace std;
-using namespace tribble;
-
 int main()
 {
 	string hostname;

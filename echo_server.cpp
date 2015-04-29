@@ -1,15 +1,14 @@
 #include <iostream>
 #include "tribble.h"
 
-using namespace std;
-using namespace tribble;
+//using namespace std;
+//using namespace tribble;
 
 int main() {
-    Socket wsock(8080);
+    StreamSocket wsock(5000);
 
     while (true) {
-        Socket sock = wsock.accept();
-
+        StreamSocket sock = wsock.accept();
         while(true) {
             error_code error;
             string rcvd = sock.receive(1024, error);
@@ -18,6 +17,6 @@ int main() {
             sock.send_all(rcvd);
         }
     }
-
+    
     return 0;
 }
