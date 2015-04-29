@@ -177,7 +177,7 @@ StreamSocket::StreamSocket(int port_number) {
     addr.sin_port = htons(port_number);              /* Local port */
 
     /* Bind to the local address */
-    bind(c_socket, (struct sockaddr *)&addr, sizeof(addr));  // make error
+    ::bind(c_socket, (struct sockaddr *)&addr, sizeof(addr));  // make error
 
     /* Mark the socket so it will listen for incoming connections */
     if (listen(c_socket, MAXPENDING) < 0)
