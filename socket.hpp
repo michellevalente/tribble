@@ -28,6 +28,12 @@ public:
     Socket(){
         MAXPENDING = 10;
     }
+
+    ~Socket()
+    {
+        if(close(c_socket)!=0) throw NetworkException("Socket could not be closed.");
+    }
+
     string receive(int buffer_size, error_code error);
     void SendSize(int bytes);
     void ReceiveSize(int bytes);
