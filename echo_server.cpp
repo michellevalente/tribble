@@ -1,22 +1,24 @@
 #include <iostream>
-#include "tribble.h"
+#include "socket.hpp"
 
 using namespace std;
-using namespace tribble;
 
 int main() {
-    Socket wsock(8080);
+    StreamSocket wsock(8080);
 
     while (true) {
-        Socket sock = wsock.accept();
+        StreamSocket sock = wsock.accept();
+        string rcvd;
 
-        while(true) {
+        do
+        {
             error_code error;
-            string rcvd = sock.receive(1024, error);
-            // if (error = error::eof)
-                // break;
+            rcvd = sock.receive(1024, error);
             sock.send_all(rcvd);
+
         }
+        while(rcvd.size()>0);
+
     }
 
     return 0;
