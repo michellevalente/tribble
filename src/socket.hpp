@@ -57,6 +57,11 @@ public:
     void send_all(const string& to_send) const;
     int operator >>( std::string& s ) const;
     const StreamSocket& operator << ( const std::string& s ) const;
+
+
+    unsigned long getPeerAddressInt() const;
+    string getPeerAddress() const;
+    unsigned short getPeerPort() const;
 };
 
 class DatagramSocket: public Socket
@@ -182,6 +187,50 @@ StreamSocket StreamSocket::accept() {
 
     return sock;
 }
+
+
+unsigned long StreamSocket::getPeerAddressInt() const
+{
+    sockaddr addr;
+    unsigned int addrLen = sizeof(addr);
+
+    if(getpeername(c_socket, &addr, &addrLen) < 0)
+    {
+        throw NetworkException("Could not get peer name.");
+    }
+
+    return ((sockaddr_in*) &addr)->sin_addr.s_addr;
+}
+
+
+string StreamSocket::getPeerAddress() const
+{
+    sockaddr addr;
+    unsigned int addrLen = sizeof(addr);
+
+    if(getpeername(c_socket, &addr, &addrLen) < 0)
+    {
+        throw NetworkException("Could not get peer name.");
+    }
+
+    return string(inet_ntoa(((sockaddr_in*) &addr)->sin_addr));
+}
+
+unsigned short StreamSocket::getPeerPort() const
+{
+    sockaddr addr;
+    unsigned int addrLen = sizeof(addr);
+
+    if(getpeername(c_socket, &addr, &addrLen) < 0)
+    {
+        throw NetworkException("Could not get peer name.");
+    }
+
+    return ((sockaddr_in*) &addr)->sin_port;
+}
+
+
+
 
 StreamSocket::StreamSocket() {
     if ((c_socket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
