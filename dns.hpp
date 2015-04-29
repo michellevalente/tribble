@@ -8,6 +8,8 @@
 #include <string>
 #include <system_error>
 
+#ifndef DNS_H
+#define DNS_H
 using namespace std;
 
 /* Function to translate hostname to ip address. Default ip_version returns 
@@ -64,3 +66,5 @@ vector<string> dns_lookup(const string hostname, int version_ip = 0){
     return ip;
 
 }
+
+#endif

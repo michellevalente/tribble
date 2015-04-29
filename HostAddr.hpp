@@ -5,6 +5,9 @@
 #include <sstream>
 #include "error.hpp"
 
+#ifndef HOSTADDR_H
+#define HOSTADDR_H
+
 using namespace std;
 
 
@@ -15,11 +18,11 @@ class HostAddr{
 private:
 	string ip_address;
 	int type;
-	int port;
+	uint16_t port;
 
 public:
 	HostAddr(){};
-	HostAddr(string ip, int port_number = 0)
+	HostAddr(string ip, uint16_t port_number = 0)
 	{
 		port = port_number;
 		struct addrinfo hint, *res = NULL;
@@ -91,7 +94,7 @@ public:
 	{
 		return ip_address;
 	}
-	int getPort()
+	uint16_t getPort()
 	{
 		return port;
 	}
@@ -126,8 +129,10 @@ public:
 	   freeaddrinfo(res);
 	}
 
-	void setPort(int port_number)
+	void setPort(uint16_t port_number)
 	{
 		port = port_number;
 	}
 };
+
+#endif

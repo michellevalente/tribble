@@ -14,6 +14,9 @@
 
 using namespace std;
 
+#ifndef SOCKET_H
+#define SOCKET_H
+
 class Socket 
 {
 protected:
@@ -49,7 +52,7 @@ class StreamSocket: public Socket
 
 public:
     StreamSocket();
-    StreamSocket(int port_number);
+    StreamSocket(uint16_t port_number);
     StreamSocket accept();
     void send_all(string to_send);
 };
@@ -59,9 +62,19 @@ class DatagramSocket: public Socket
 
 public:
     DatagramSocket();
-    DatagramSocket(int port_number);
+    DatagramSocket(uint16_t port_number);
     string receiveFrom(int buffer_size, HostAddr& client);
     void sendTo(string message, HostAddr &client);
+};
+
+class Broadcast : public DatagramSocket
+{
+
+private:
+    HostAddr addr;
+public:
+    Broadcast(uint16_t port_number);
+
 };
 
 void Socket::SendSize(int bytes){
@@ -164,8 +177,8 @@ StreamSocket::StreamSocket() {
         throw NetworkException("Socket error.");
 }
 
-StreamSocket::StreamSocket(int port_number) {
-    this->port_number = port_number;
+StreamSocket::StreamSocket(uint16_t port) {
+    this->port_number = port;
 
     if ((c_socket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
         throw NetworkException("Socket error.");
@@ -174,7 +187,7 @@ StreamSocket::StreamSocket(int port_number) {
     memset(&addr, 0, sizeof(addr));       /* Zero out structure */
     addr.sin_family = AF_INET;                /* Internet address family */
     addr.sin_addr.s_addr = htonl(INADDR_ANY); /* Any incoming interface */
-    addr.sin_port = htons(port_number);              /* Local port */
+    addr.sin_port = htons(this->port_number);              /* Local port */
 
     /* Bind to the local address */
     ::bind(c_socket, (struct sockaddr *)&addr, sizeof(addr));  // make error
@@ -189,7 +202,7 @@ DatagramSocket::DatagramSocket() {
         throw std::invalid_argument("Socket error.");
 }  
 
-DatagramSocket::DatagramSocket(int port_number) {
+DatagramSocket::DatagramSocket(uint16_t port_number) {
     this->port_number = port_number;
 
     if ((c_socket = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
@@ -217,7 +230,7 @@ DatagramSocket::DatagramSocket(int port_number) {
 string DatagramSocket::receiveFrom(int buffer_size, HostAddr &client){
     struct sockaddr_in clientAddr;
     socklen_t len;
-    char * addr;
+    char* addr;
     char* buffer = new char[buffer_size+1];
 
     int sz = recvfrom(c_socket, buffer, buffer_size, 0,(struct sockaddr *)&clientAddr, &len);
@@ -229,8 +242,9 @@ string DatagramSocket::receiveFrom(int buffer_size, HostAddr &client){
     buffer[sz] = '\0';
     string str(buffer);
     delete[] buffer;
-
-    client.setPort(clientAddr.sin_port);
+ 
+    cout << endl;
+    client.setPort(ntohs(clientAddr.sin_port));
     addr = inet_ntoa(clientAddr.sin_addr);
     client.setIp(string(addr));
 
@@ -250,16 +264,30 @@ void DatagramSocket::sendTo(string message, HostAddr &client){
 
 
     clientAddr.sin_port = htons(client.getPort());
-
+    // cout << "porta 1 : " << client.getPort();
     inet_aton(client.getIp().c_str(), &clientAddr.sin_addr);
 
     /* Send message */
     while (length > 0)
     {
         int i = sendto(c_socket,ptr,length,0,(struct sockaddr *)&clientAddr,sizeof(clientAddr));
+        int tmp = errno;
+        if(i < 0) {
+            printf("ERROR: %s , errno %d\n", strerror(tmp), tmp);
+            printf("while sending to port %d\n", client.getPort());
+        }
         if (i < 1) 
             throw NetworkException("Send message error.");
+        
         ptr += i;
         length -= i;
     }
 }
+/*
+Broadcast::Broadcast(uint16_t port_number) : DatagramSocket(port_number)
+{
+    int broadcast_on = 1;
+    setsockopt(SD, SOL_SOCKET, SO_BROADCAST, &broadcast_on, sizeof(broadcast_on));
+}
+*/
+#endif
