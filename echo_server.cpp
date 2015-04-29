@@ -10,9 +10,9 @@ int main() {
     while (true) {
         StreamSocket sock = wsock.accept();
         string rcvd;
-        
+
         while(sock >> rcvd) 
-            sock << rcvd;
+            sock << "Starting to echo\n" << rcvd << "Finishing echo\n";
     }
 
     return 0;

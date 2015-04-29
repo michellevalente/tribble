@@ -56,7 +56,7 @@ public:
     StreamSocket accept();
     void send_all(const string& to_send) const;
     int operator >>( std::string& s ) const;
-    void operator << ( const std::string& s ) const;
+    const StreamSocket& operator << ( const std::string& s ) const;
 };
 
 class DatagramSocket: public Socket
@@ -200,9 +200,10 @@ StreamSocket::StreamSocket(uint16_t port) {
 }
 
 
-void StreamSocket::operator << ( const std::string& s ) const
+const StreamSocket& StreamSocket::operator << ( const std::string& s ) const
 {
     send_all(s);
+    return *this;
 }
 
 #define CHUNK_SIZE 10
