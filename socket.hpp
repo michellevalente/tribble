@@ -54,7 +54,9 @@ public:
     StreamSocket();
     StreamSocket(uint16_t port_number);
     StreamSocket accept();
-    void send_all(string to_send);
+    void send_all(const string& to_send) const;
+    int operator >>( std::string& s ) const;
+    void operator << ( const std::string& s ) const;
 };
 
 class DatagramSocket: public Socket
@@ -150,9 +152,9 @@ string Socket::receive(int buffer_size, error_code error) {
     return str;
 }
 
-void StreamSocket::send_all(string to_send) {
+void StreamSocket::send_all(const string& to_send) const{
     int length = to_send.length();
-    char *ptr = &to_send[0];
+    const char *ptr = &to_send[0];
     while (length > 0)
     {
         int i = send(c_socket, ptr, length, 0);
@@ -196,6 +198,46 @@ StreamSocket::StreamSocket(uint16_t port) {
     if (listen(c_socket, MAXPENDING) < 0)
         throw std::invalid_argument("Listen error.");
 }
+
+
+void StreamSocket::operator << ( const std::string& s ) const
+{
+    send_all(s);
+}
+
+#define CHUNK_SIZE 10
+
+int StreamSocket::operator >>( std::string& s ) const
+{
+    char *chunking = new char[CHUNK_SIZE];
+    int chunked;
+
+    s = "";
+
+    do
+    {
+        chunked = recv( c_socket, chunking, CHUNK_SIZE, 0 );
+
+        if(chunked<0)
+        {
+            delete [] chunking;
+            throw NetworkException("Could not hear from socket.");
+        }
+        if(chunked>0)
+        {
+            s.insert( s.size() , chunking , chunked );
+        }
+
+        //cout<<"recv()ed chunked: "<<chunked<<" as of now: "<<s<<endl;
+
+    }
+    while(chunked > 0); // zero indicates end of connection (ctrl-D)
+
+
+    delete [] chunking;
+    return s.size();
+}
+
 
 DatagramSocket::DatagramSocket() {
     if ((c_socket = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
