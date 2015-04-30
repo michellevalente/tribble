@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "StreamSocket.hpp"
+#include "ServerSocket.hpp"
 #include "Buffer.hpp"
 #define PORT 5000
 
@@ -12,7 +13,7 @@ int main()
 	int size;
 
 	FILE * inputFile;
-	StreamSocket socket(PORT);
+	ServerSocket socket(PORT);
 
 	cout << "File name: ";
 	cin >> filename;

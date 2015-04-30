@@ -1,6 +1,6 @@
 #include <system_error>
 #include "Socket.hpp"
-#include "BufferedSocket.hpp"
+#include "StreamSocket.hpp"
 
 #ifndef SERVER_SOCKET_H
 #define SERVER_SOCKET_H
@@ -9,33 +9,11 @@ class ServerSocket: public Socket
 {
 
 public:
-    ServerSocket();
     ServerSocket(uint16_t port_number);
-    BufferedSocket accept();
-    void send_all(const string& to_send) const;
+    StreamSocket accept();
     string getPeerAddress() const;
     unsigned short getPeerPort() const;
 };
-
-
-void ServerSocket::send_all(const string& to_send) const
-{
-    int length = to_send.length();
-    const char *ptr = &to_send[0];
-    while (length > 0) {
-        int i = ::send(c_socket, ptr, length, 0);
-        if (i < 1) 
-            throw NetworkException("Error sending message.", errno);
-        ptr += i;
-        length -= i;
-    }
-}
-
-ServerSocket::ServerSocket()
-{
-    if ((c_socket = ::socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
-        throw NetworkException("Socket creation failed.", errno);
-}
 
 ServerSocket::ServerSocket(uint16_t port)
 {
@@ -59,14 +37,14 @@ ServerSocket::ServerSocket(uint16_t port)
         throw NetworkException("Socket listen failed.", errno);
 }
 
-BufferedSocket ServerSocket::accept()
+StreamSocket ServerSocket::accept()
 {
-    BufferedSocket sock;
+    StreamSocket socket;
     struct sockaddr_in addr;
     unsigned int addrLen = sizeof(addr); 
-    sock.c_socket = ::accept(c_socket, (struct sockaddr *)&addr, &addrLen) ;
+    socket.changeSocket(::accept(c_socket, (struct sockaddr *)&addr, &addrLen)) ;
 
-    return sock;
+    return socket;
 }
 
 string ServerSocket::getPeerAddress() const

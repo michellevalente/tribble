@@ -11,8 +11,6 @@ class StreamSocket: public Socket
 
 public:
     StreamSocket();
-    StreamSocket(uint16_t port_number);
-    StreamSocket accept();
     void connect(HostAddr& peer);
     void send_all(const string& to_send) const;
     void send(const string& to_send, int buffer_size);
@@ -20,6 +18,7 @@ public:
     unsigned short getPeerPort() const;
     int operator >>( std::string& s ) const;
     const StreamSocket& operator << ( const std::string& s ) const;
+    void changeSocket(int sock);
 };
 
 /** \brief Sends the entire string.
@@ -51,40 +50,6 @@ StreamSocket::StreamSocket()
 {
     if ((c_socket = ::socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
         throw NetworkException("Socket creation failed.", errno);
-}
-
-StreamSocket::StreamSocket(uint16_t port)
-{
-    this->port_number = port;
-
-    if ((c_socket = ::socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
-        throw NetworkException("Socket creation failed.", errno);
-
-    struct sockaddr_in addr;
-    memset(&addr, 0, sizeof(addr));       /* Zero out structure */
-    addr.sin_family = AF_INET;                /* Internet address family */
-    addr.sin_addr.s_addr = htonl(INADDR_ANY); /* Any incoming interface */
-    addr.sin_port = htons(this->port_number);              /* Local port */
-
-    /* Bind to the local address */
-    if (::bind(c_socket, (struct sockaddr *)&addr, sizeof(addr)) == -1)
-        throw NetworkException("Socket bind failed.", errno);
-
-    /* Mark the socket so it will listen for incoming connections */
-    if (::listen(c_socket, MAXPENDING) < 0)
-        throw NetworkException("Socket listen failed.", errno);
-}
-
-/** \brief Accepts a new connection.
- */
-StreamSocket StreamSocket::accept()
-{
-    StreamSocket sock;
-    struct sockaddr_in addr;
-    unsigned int addrLen = sizeof(addr); 
-    sock.c_socket = ::accept(c_socket, (struct sockaddr *)&addr, &addrLen);
-
-    return sock;
 }
 
 /** \brief Accepts a new connection.
@@ -168,6 +133,11 @@ int StreamSocket::operator>>(std::string& s) const
 
     delete [] chunking;
     return s.size();
+}
+
+void StreamSocket::changeSocket(int sock)
+{
+    c_socket = sock;
 }
 
 #endif

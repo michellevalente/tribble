@@ -1,11 +1,12 @@
 #include <iostream>
 #include "StreamSocket.hpp"
+#include "ServerSocket.hpp"
 
 
 int main() {
     const short port = 5000;
 
-    StreamSocket wsock(5000);
+    ServerSocket wsock(5000);
 
     std::cout << "Listening on port " << port << "\n\n";
 

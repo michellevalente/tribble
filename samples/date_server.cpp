@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "StreamSocket.hpp"
+#include "ServerSocket.hpp"
 
 using namespace std;
 
@@ -22,7 +23,7 @@ int main()
 	cout << "Port number: ";
 	cin >> port;
 
-	StreamSocket socket(port);
+	ServerSocket socket(port);
 
 	for(;;)
 	{

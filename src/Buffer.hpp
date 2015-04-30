@@ -25,7 +25,7 @@ public:
     {
         return capacity;
     }
-    int setSize(int sz)
+    void setSize(int sz)
     {
         this->sz = sz;
     }
