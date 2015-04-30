@@ -17,25 +17,40 @@ public:
     {
         buffer = new char[capacity];
     }
+
+    /** \brief Return buffer as a void *
+     *
+     */
     void* getArray() const
     {
         return buffer;
     }
+
+    /** \brief Return buffer's size.
+     *
+     */
     int getCapacity() const
     {
         return capacity;
     }
+
+    /** \brief Set the buffer size.
+     *
+     */
     void setSize(int sz)
     {
         this->sz = sz;
     }
+
+    /** \brief Return buffer's size.
+     *
+     */
     int getSize() const
     {
         return sz;
     }
     void copyTo(void* otherBuffer) const;
-    // void addData(void* data, int capacity) const;
-    // void copyTo(Buffer buffer) const;
+
 };
 
 /** \brief Copies to whole buffer to the given buffer
