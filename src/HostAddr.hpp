@@ -34,6 +34,7 @@ public:
 	}
 
 	/** \brief Returns the socket IP in string format.
+	 *
      */
 	std::string getIp()
 	{
@@ -41,6 +42,7 @@ public:
 	}
 
 	/** \brief Returns the socket port number.
+	 *
      */
 	uint16_t getPort()
 	{
@@ -57,6 +59,7 @@ public:
 	}
 
 	/** \brief Sets the port number of the host address.
+	 *
      */
 	void setPort(uint16_t port_number)
 	{
