@@ -10,32 +10,31 @@
 #ifndef HOSTADDR_H
 #define HOSTADDR_H
 
-/** \brief Represents a socket address.
- *
- *  
+/** \brief Represents an endpoint address (IP, Port)
+ *	Port is stored as a uint16, ip address is an IPAddr
  */
-class HostAddr{
-
+class HostAddr
+{
 private:
-	IPAddr ip_address;
+	IPAddr ipAddr;
 	uint16_t port;
 
 public:
 
 	HostAddr(){
-		ip_address = IPAddr("");
+		ipAddr = IPAddr("");
 		port = 0;
 	};
 
 	HostAddr(std::string ip, uint16_t port_number = 0)
 	{
 		port = port_number;
-		ip_address = IPAddr(ip);
+		ipAddr = IPAddr(ip);
 	}
 
 	std::string getIp()
 	{
-		return ip_address.stringIP();
+		return ipAddr.stringIP();
 	}
 
 	uint16_t getPort()
@@ -45,12 +44,7 @@ public:
 
 	void setIP(std::string ip)
 	{
-		ip_address = IPAddr(ip);
-	}
-
-	void setIP(IPAddr ip)
-	{
-		ip_address = ip;
+		ipAddr = IPAddr(ip);
 	}
 
 	void setPort(uint16_t port_number)
@@ -60,7 +54,7 @@ public:
 
 	EFamily getFamily()
 	{
-		return ip_address.getFamily();
+		return ipAddr.getFamily();
 	}
 
 };

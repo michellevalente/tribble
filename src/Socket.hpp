@@ -12,7 +12,7 @@
 #include "Error.hpp"
 #include "HostAddr.hpp"
 
-using namespace std;
+using std::string;
 
 #ifndef SOCKET_H
 #define SOCKET_H

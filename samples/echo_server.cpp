@@ -14,11 +14,12 @@ int main() {
     string rcvd;
 
     do {
-        error_code error;
         rcvd = sock.receive(1024);
         sock.send_all(rcvd);
     }
     while (rcvd.size() > 0);
+
+    std::cout << "Connection closed" << "\n";
 
     return 0;
 }
