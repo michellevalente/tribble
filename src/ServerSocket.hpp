@@ -6,6 +6,8 @@
 #ifndef SERVER_SOCKET_H
 #define SERVER_SOCKET_H
 
+/** \brief Represents a Stream Server Socket 
+ */
 class ServerSocket: public Socket
 {
 
@@ -39,6 +41,8 @@ ServerSocket::ServerSocket(uint16_t port)
         throw NetworkException("Socket listen failed.", errno);
 }
 
+/** \brief Accepts a new connection and returns a new StreamSocket
+ */
 StreamSocket ServerSocket::accept()
 {
     StreamSocket socket;
@@ -59,6 +63,8 @@ BufferedSocket ServerSocket::acceptBuffered()
     return socket;
 }
 
+/** \brief Get the peer IP address.
+ */
 string ServerSocket::getPeerAddress() const
 {
     sockaddr addr;
@@ -72,6 +78,8 @@ string ServerSocket::getPeerAddress() const
     return string(inet_ntoa(((sockaddr_in*) &addr)->sin_addr));
 }
 
+/** \brief Get the Peer port number.
+ */
 uint16_t ServerSocket::getPeerPort() const
 {
     sockaddr addr;
