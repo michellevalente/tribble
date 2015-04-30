@@ -16,7 +16,7 @@ using namespace std;
 
 /* Function to translate hostname to ip address. Default ip_version returns 
  * ipv4 and ipv6 addresses */
-vector<IPAddr> dns_lookup(const string hostname, int version_ip = 0){
+vector<IPAddr> dns_lookup(const string hostname, EFamily version_ip = ANY){
 
     vector<IPAddr> ip; 
     struct addrinfo hints;
@@ -25,9 +25,9 @@ vector<IPAddr> dns_lookup(const string hostname, int version_ip = 0){
 
     memset(&hints, 0, sizeof(struct addrinfo));
 
-    if(version_ip == 6)
+    if(version_ip == IPV6)
         hints.ai_family = AF_INET6;
-    else if(version_ip == 4)
+    else if(version_ip == IPV4)
         hints.ai_family = AF_INET;
     else
         hints.ai_family = AF_UNSPEC;

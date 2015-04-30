@@ -1,5 +1,6 @@
 #include <iostream>
 #include "DNS.hpp"
+#include "IPAddr.hpp"
 
 int main()
 {
@@ -11,7 +12,7 @@ int main()
 
 	cout << "IPV4: \n";
 
-	ip = dns_lookup(hostname, 4);
+	ip = dns_lookup(hostname, IPV4);
 
 	for(int i = 0; i < ip.size(); i++){
 		cout << " " << ip[i].stringIP() << endl;
@@ -19,7 +20,7 @@ int main()
 
 	cout << "IPV6: \n";
 
-	ip = dns_lookup(hostname, 6);
+	ip = dns_lookup(hostname, IPV6);
 	
 	for(int i = 0; i < ip.size(); i++){
 		cout << " " << ip[i].stringIP() << endl;

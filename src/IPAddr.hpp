@@ -11,7 +11,7 @@
 #ifndef IPADDR_H
 #define IPADDR_H
 
-typedef enum {IPV4 = AF_INET, IPV6 = AF_INET6} EFamily;
+typedef enum {IPV4 = AF_INET, IPV6 = AF_INET6, ANY = AF_UNSPEC} EFamily;
 
 /** \brief Represents an IP Address.
  *
