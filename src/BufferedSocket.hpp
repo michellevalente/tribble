@@ -9,6 +9,8 @@
 
 class ServerSocket;
 
+/** \brief Represents a Stream Socket (TCP) with I/O
+ */
 class BufferedSocket: public Socket
 {
 
@@ -28,11 +30,8 @@ public:
     BufferedSocket& getNextLine(std::string& s);
     void connect(string server, unsigned short port);
 
-    void setC_Socket(int s) // @TODO: check if this is ok
-    {
-        c_socket=s;
-    }
-
+    /** \brief cout bool overload for chaining.
+    */
     operator bool()
     {
         return !eof;
@@ -45,7 +44,8 @@ protected:
     bool eof;
 };
 
-
+/** \brief Represents a Stream Socket (TCP)
+ */
 void BufferedSocket::sendAll(const string& to_send) const
 {
     int length = to_send.length();
@@ -59,7 +59,8 @@ void BufferedSocket::sendAll(const string& to_send) const
     }
 }
 
-
+/** \brief Sends the entire string.
+ */
 BufferedSocket::BufferedSocket()
 {
     eof=false;
@@ -68,6 +69,8 @@ BufferedSocket::BufferedSocket()
         throw NetworkException("Socket creation failed.", errno);
 }
 
+/** \brief Returns the peer's IP.
+ */
 string BufferedSocket::getPeerAddress() const
 {
     sockaddr addr;
@@ -81,6 +84,8 @@ string BufferedSocket::getPeerAddress() const
     return string(inet_ntoa(((sockaddr_in*) &addr)->sin_addr));
 }
 
+/** \brief Returns the peer's port number.
+ */
 uint16_t BufferedSocket::getPeerPort() const
 {
     sockaddr addr;
@@ -94,31 +99,38 @@ uint16_t BufferedSocket::getPeerPort() const
     return ((sockaddr_in*) &addr)->sin_port;
 }
 
-
+/** \brief Put string on the queue (supports chaining)
+ */
 BufferedSocket& BufferedSocket::operator<<(const std::string& s)
 {
     toSend+=s;
     return *this;
 }
 
-
+/** \brief Normal endline
+ */
 string endN()
 {
     return "\n";
 }
 
+/** \brief HTTP endline
+ */
 string endRN()
 {
     return "\r\n";
 }
 
+/** \brief Returns the peer's port number.
+ */
 BufferedSocket& BufferedSocket::operator<<( string(*fptr)(void) )
 {
     toSend+=fptr();
     return *this;
 }
 
-
+/** \brief Send what was queued
+ */
 void BufferedSocket::flush()
 {
     sendAll(toSend);
@@ -127,6 +139,9 @@ void BufferedSocket::flush()
 
 #define FILLING_SIZE 100
 
+/** \brief Receive something and put into the buffer. 
+            Set flag eof in case of nothing received
+ */
 void BufferedSocket::fillBuffer()
 {
     char buffer[FILLING_SIZE];
@@ -147,6 +162,8 @@ void BufferedSocket::fillBuffer()
     }
 }
 
+/** \brief Takes the nextString out of the buffer.
+ */
 string BufferedSocket::getNextString()
 {
     string nextString = "";
@@ -184,13 +201,16 @@ string BufferedSocket::getNextString()
     return nextString;
 }
 
+/** \brief Calls getNextString for the string in the chain.
+ */
 BufferedSocket& BufferedSocket::operator>>(std::string& s)
 {
     s = getNextString();
     return *this;
 }
 
-
+/** \brief Takes the nextLine out of the buffer.
+ */
 BufferedSocket& BufferedSocket::getNextLine(std::string& s)
 {
     string nextLine = "";
@@ -223,6 +243,8 @@ BufferedSocket& BufferedSocket::getNextLine(std::string& s)
     return *this;
 }
 
+/** \brief Connects using string server and port
+ */
 void BufferedSocket::connect(string server, unsigned short port)
 {
     std::vector<IPAddr> ips = dns_lookup( server , IPV4);
