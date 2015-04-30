@@ -40,6 +40,10 @@ DatagramSocket::DatagramSocket(uint16_t port_number)
     }
 }
 
+/** \brief Receive message from socket.
+ *  
+ * Send a HostAddr client by reference to get IP and Port number.
+ */
 string DatagramSocket::receiveFrom(int buffer_size, HostAddr &client)
 {
     struct sockaddr_in clientAddr;
@@ -61,6 +65,10 @@ string DatagramSocket::receiveFrom(int buffer_size, HostAddr &client)
     return str;
 }
 
+/** \brief Send message from socket.
+ *  
+ * Send a HostAddr client with IP and Port number.
+ */
 void DatagramSocket::sendTo(string message, HostAddr &client)
 {
     int length = message.length();
