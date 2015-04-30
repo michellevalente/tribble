@@ -12,6 +12,7 @@
 #include <system_error>
 #include "Error.hpp"
 #include "HostAddr.hpp"
+#include "Buffer.hpp"
 
 using std::string;
 
@@ -42,7 +43,8 @@ public:
             throw NetworkException("Socket could not be closed.", errno);
     }
 
-    string receive(int buffer_size);
+    int receive(Buffer& buffer);
+    string receive(int buffer_size=1024);
     //int select(vector<Socket> readSocket, vector<Socket> writeSocket, struct timeval time );
     void setSendSize(int bytes);
     void setReceiveSize(int bytes);
@@ -149,10 +151,21 @@ int Socket::localPort()
     return ntohs(address.sin_port);
 }
 
+/** \brief Receives data on a socket, storing it in the given buffer.
+  *  Returns the amount of characters received
+  */
+int Socket::receive(Buffer& buffer)
+{
+    int sz = ::recv(c_socket, buffer.getArray(), buffer.getCapacity(), 0);
+    buffer.setSize(sz);
+
+    return sz;
+}
+
 string Socket::receive(int buffer_size)
 {
     char* buffer = new char[buffer_size+1];
-    int sz = recv(c_socket, buffer, sizeof(buffer), 0);
+    int sz = ::recv(c_socket, buffer, sizeof(buffer), 0);
 
     buffer[sz] = '\0';
     string str(buffer);
