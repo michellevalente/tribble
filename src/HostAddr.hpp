@@ -10,7 +10,8 @@
 #ifndef HOSTADDR_H
 #define HOSTADDR_H
 
-/** \brief Represents an endpoint address (IP, Port)
+/** \brief Represents an endpoint address (IP, Port).
+ *
  *	Port is stored as a uint16, ip address is an IPAddr
  */
 class HostAddr
@@ -26,7 +27,6 @@ public:
 		port = 0;
 	};
 
-	// Constructor
 	HostAddr(std::string ip, uint16_t port_number = 0)
 	{
 		port = port_number;
@@ -48,6 +48,7 @@ public:
 	}
 
 	/** \brief Set the IP of the host address.
+	 *
 	 *	Receives the IP as a string.
      */
 	void setIP(std::string ip)
@@ -63,6 +64,7 @@ public:
 	}
 
 	/** \brief Returns the IP address family.
+	 *
      *  Receive the family as a EFamily.
      */
 	EFamily getFamily()
