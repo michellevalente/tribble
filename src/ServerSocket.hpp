@@ -11,13 +11,10 @@ class ServerSocket: public Socket
 public:
     ServerSocket();
     ServerSocket(uint16_t port_number);
-    ServerSocket accept();
-    BufferedSocket acceptBuffered();
+    BufferedSocket accept();
     void send_all(const string& to_send) const;
     string getPeerAddress() const;
     unsigned short getPeerPort() const;
-    int operator >>( std::string& s ) const;
-    const ServerSocket& operator << ( const std::string& s ) const;
 };
 
 
@@ -62,22 +59,12 @@ ServerSocket::ServerSocket(uint16_t port)
         throw NetworkException("Socket listen failed.", errno);
 }
 
-ServerSocket ServerSocket::accept()
-{
-    ServerSocket sock;
-    struct sockaddr_in addr;
-    unsigned int addrLen = sizeof(addr); 
-    sock.c_socket = ::accept(c_socket, (struct sockaddr *)&addr, &addrLen);
-
-    return sock;
-}
-
-BufferedSocket ServerSocket::acceptBuffered()
+BufferedSocket ServerSocket::accept()
 {
     BufferedSocket sock;
     struct sockaddr_in addr;
     unsigned int addrLen = sizeof(addr); 
-    sock.setC_Socket( ::accept(c_socket, (struct sockaddr *)&addr, &addrLen) );
+    sock.c_socket = ::accept(c_socket, (struct sockaddr *)&addr, &addrLen) ;
 
     return sock;
 }
@@ -108,38 +95,5 @@ uint16_t ServerSocket::getPeerPort() const
     return ((sockaddr_in*) &addr)->sin_port;
 }
 
-const ServerSocket& ServerSocket::operator<<(const std::string& s) const
-{
-    send_all(s);
-    return *this;
-}
-
-#define CHUNK_SIZE 10
-
-int ServerSocket::operator>>(std::string& s) const
-{
-    char *chunking = new char[CHUNK_SIZE];
-    int chunked;
-
-    s = "";
-
-    do {
-        chunked = recv( c_socket, chunking, CHUNK_SIZE, 0 );
-
-        if(chunked<0) {
-            int _errno = errno;
-            delete [] chunking;
-            throw NetworkException("Receiving from socket failed", _errno);
-        }
-
-        if(chunked>0) {
-            s.insert( s.size() , chunking , chunked );
-        }
-    }
-    while(chunked > 0); // zero indicates end of connection (ctrl-D)
-
-    delete [] chunking;
-    return s.size();
-}
 
 #endif

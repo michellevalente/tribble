@@ -10,7 +10,7 @@ int main() {
 
     while (true) {
 
-        BufferedSocket sock = wsock.acceptBuffered();
+        BufferedSocket sock = wsock.accept();
 
 		cout<<"  Connection established with "<<sock.getPeerAddress()<<endl; 
 

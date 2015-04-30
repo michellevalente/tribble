@@ -7,8 +7,12 @@
 #ifndef BUFFERED_SOCKET_H
 #define BUFFERED_SOCKET_H
 
+class ServerSocket;
+
 class BufferedSocket: public Socket
 {
+
+    friend class ServerSocket;
 
 public:
     BufferedSocket();
