@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <exception>
 
 #include "Error.hpp"
 
@@ -20,62 +21,66 @@ class IPAddr
 {
 
 private:
-	std::string ip_address;
+	std::string strIpAddr;
 	EFamily family;
 
 public:
 	IPAddr()
 	{
-		ip_address = "";
+		strIpAddr = "";
 	}
-	IPAddr(std::string ip)
+
+	IPAddr(std::string strIP)
 	{
 		struct addrinfo hint, *res = NULL;
-	    int result;
 	    memset(&hint, '\0', sizeof hint);
 	    hint.ai_family = PF_UNSPEC;
 	    hint.ai_flags = AI_NUMERICHOST;
 
-	    result = getaddrinfo(ip.c_str(), NULL, &hint, &res);
+	    int error_code = getaddrinfo(strIP.c_str(), NULL, &hint, &res);
 
-	    if (result) {
-	        throw NetworkException("Invalid IP address");
+	    if (error_code) {
+	    	std::string error_message("Invalid IP address: ");
+	    	error_message += gai_strerror(error_code);
+
+	        throw std::invalid_argument(error_message);
 	    }
 
 	    // Test for ipv4 address 
-	    if(res->ai_family == AF_INET) {
-	        family = IPV4;
-	        
-	    } 
-	    // Test for ipv6 address 
-	    else if (res->ai_family == AF_INET6) {
-	        family = IPV6;
-	    } 
-	    else {
-	        throw NetworkException("Invalid IP address");
+	    switch(res->ai_family) {
+	    	case AF_INET:
+	    		family = IPV4;
+	    	case AF_INET6:
+	    		family = IPV6;
+	    	default:
+	    		throw NetworkException("Invalid IP type", 0);
 	    }
 
-	    ip_address = ip;
+	    strIpAddr = strIP;
 	    freeaddrinfo(res);
 	}
 
-	//  Returns 4 for IPV4 and 6 for IPV6 
+	/** Returns the EFamily (IPV4 or IPV6) of the IPAddress*/
 	EFamily getFamily()
 	{
 		return family;
 	}
 
+	/** \brief Generates a brodcast IP Address, given the mask.
+	  *	Can only be called for IPV4 addresses.
+	  */
 	IPAddr generateBroadcast(std::string mask)
 	{
-		if(family == IPV6)
-			throw NetworkException("Invalid ip address");
-		else{
+		if (family == IPV6) {
+			throw std::invalid_argument("Broadcast doesn't work for IPV6 addresses.");
+		}
+		else {
 			char dot;
 			int ip_int[4] ;
         	int mask_int[4] ;
         	int broadcast_int[4];
         	std::string broadcast_s;
-			std::istringstream s1(ip_address);
+			std::istringstream s1(strIpAddr);
 			std::istringstream s2(mask);
 
 			s1 >> ip_int[0] >> dot >> ip_int[1] >> dot >> ip_int[2] >> dot >> 
@@ -97,7 +102,7 @@ public:
 
 	std::string stringIP()
 	{
-		return ip_address;
+		return strIpAddr;
 	}
 };
 

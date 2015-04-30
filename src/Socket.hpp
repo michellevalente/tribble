@@ -30,101 +30,101 @@ protected:
     int port_number;
 
 public:
-    Socket(){
+    Socket()
+    {
         MAXPENDING = 10;
     }
 
     ~Socket()
     {
-        if(close(c_socket)!=0) throw NetworkException("Socket could not be closed.");
+        if (close(c_socket)!=0) 
+            throw NetworkException("Socket could not be closed.", errno);
     }
 
     string receive(int buffer_size);
-    void SendSize(int bytes);
-    void ReceiveSize(int bytes);
+    void setSendSize(int bytes);
+    void setReceiveSize(int bytes);
     int getSendSize();
     int getReceiveSize();
-    void SendTimeOut(struct timeval time);
-    void ReceiveTimeOut(struct timeval time);
-    string localAddr();
+    void setSendTimeOut(struct timeval time);
+    void setReceiveTimeOut(struct timeval time);
+    IPAddr localAddr();
     //string peerAddr();
     int localPort();
     
 };
 
-// class Multicast : public DatagramSocket
-// {
-
-// private:
-//     HostAddr addr;
-// public:
-//     Multicast(uint16_t port_number);
-
-// };
-
-void Socket::SendSize(int bytes){
+void Socket::setSendSize(int bytes)
+{
 
     if ( setsockopt(c_socket, SOL_SOCKET, SO_SNDBUF, &bytes, sizeof(bytes)) != 0 )
-        throw NetworkException("Send Buffer error");
+        throw NetworkException("Error setting send buffer size.", errno);
 }
 
-void Socket::ReceiveSize(int bytes){
-
+void Socket::setReceiveSize(int bytes)
+{
     if ( setsockopt(c_socket, SOL_SOCKET, SO_RCVBUF, &bytes, sizeof(bytes)) != 0 )
-        throw NetworkException("Receive Buffer error");
+        throw NetworkException("Error setting receive buffer size.", errno);
 }
 
-int Socket::getSendSize(){
+int Socket::getSendSize()
+{
     int size;
     socklen_t len=sizeof(size);
     if ( getsockopt(c_socket, SOL_SOCKET, SO_SNDBUF, &size, &len) != 0 )
-        throw NetworkException("Send Buffer error");
+        throw NetworkException("Error getting send buffer size.", errno);
 
     return size;
 }
 
-int Socket::getReceiveSize(){
+int Socket::getReceiveSize()
+{
     int size;
     socklen_t len=sizeof(size);
     if ( getsockopt(c_socket, SOL_SOCKET, SO_RCVBUF, &size, &len) != 0 )
-        throw NetworkException("Send Buffer error");
+        throw NetworkException("Error getting receive buffer size.", errno);
 
     return size;
 }
 
-void Socket::SendTimeOut(struct timeval t){
+void Socket::setSendTimeOut(struct timeval t)
+{
     if ( setsockopt(c_socket, SOL_SOCKET, SO_SNDTIMEO, &t, sizeof(t)) != 0 )
-        throw NetworkException("Send Timeout error");
+        throw NetworkException("Error setting send timeout value.", errno);
 }
 
-void Socket::ReceiveTimeOut(struct timeval t){
-    if ( setsockopt(c_socket, SOL_SOCKET, SO_RCVBUF, &t, sizeof(t)) != 0 )
-        throw NetworkException("Receive Timeout error");
+void Socket::setReceiveTimeOut(struct timeval t)
+{
+    if ( setsockopt(c_socket, SOL_SOCKET, SO_RCVTIMEO, &t, sizeof(t)) != 0 )
+        throw NetworkException("Error setting receive timeout value.", errno);
 }
 
-string Socket::localAddr(){
+IPAddr Socket::localAddr()
+{
     sockaddr_in address;
     int len = sizeof(address);
 
     if (getsockname(c_socket, (sockaddr *) &address, (socklen_t *) &len) < 0) {
-        throw NetworkException("Get Local Address failed.");
+        throw NetworkException("Error getting local ip address.", errno);
     }
 
-    return inet_ntoa(address.sin_addr);
+    return IPAddr(inet_ntoa(address.sin_addr));
 }
 
-int Socket::localPort(){
+int Socket::localPort()
+{
     sockaddr_in address;
     int len = sizeof(address);
 
     if (getsockname(c_socket, (sockaddr *) &address, (socklen_t *) &len) < 0) {
-        throw NetworkException("Get Local Port failed.");
+        throw NetworkException("Error getting local port.", errno);
     }
 
     return ntohs(address.sin_port);
 }
 
-string Socket::receive(int buffer_size) {
+string Socket::receive(int buffer_size)
+{
     char* buffer = new char[buffer_size+1];
     int sz = recv(c_socket, buffer, sizeof(buffer), 0);
 
@@ -134,13 +134,5 @@ string Socket::receive(int buffer_size) {
 
     return str;
 }
-
-
-
-// Multicast::Multicast(uint16_t port_number) : DatagramSocket(port_number)
-// {
-//     int broadcast_on = 1;
-//     setsockopt(c_socket,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof(yes));
-// }
 
 #endif
