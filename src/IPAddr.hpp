@@ -4,7 +4,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
-#include <exception>
+#include <stdexcept>
 
 #include "Error.hpp"
 
@@ -84,24 +84,24 @@ public:
             int ip_int[4] ;
             int mask_int[4] ;
             int broadcast_int[4];
-            std::string broadcast_s;
+            
             std::istringstream s1(strIpAddr);
+            for (int i=0; i<4; i++)
+                s1 >> ip_int[i] >> dot;
+
             std::istringstream s2(mask);
+            for (int i=0; i<4; i++)
+                s2 >> mask_int[i] >> dot;
 
-            s1 >> ip_int[0] >> dot >> ip_int[1] >> dot >> ip_int[2] >> dot >> 
-            ip_int[3] >> dot;
+            for (int i=0; i<4; i++)
+                broadcast_int[i] = int(ip_int[i]) | int(mask_int[i]);
 
-            s2 >> mask_int[0] >> dot >> mask_int[1] >> dot >> mask_int[2] >> dot >> 
-            mask_int[3] >> dot;
+            std::ostringstream broadcast_s;
+            broadcast_s << broadcast_int[0];
+            for (int i=1; i<4; i++)
+                broadcast_s << "." << broadcast_int[i];
 
-            for(int i = 0; i < 4 ; i++){
-                broadcast_int[i] = int(ip_int[i]) | int(mask_int[i]) ;
-            }
-
-            broadcast_s = std::to_string(broadcast_int[0]) + "." + std::to_string(broadcast_int[1]) + 
-            "." + std::to_string(broadcast_int[2]) + "." + std::to_string(broadcast_int[3]);
-
-            return IPAddr(broadcast_s);
+            return IPAddr(broadcast_s.str());
         }
     }
 
