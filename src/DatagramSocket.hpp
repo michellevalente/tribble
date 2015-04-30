@@ -12,7 +12,7 @@ class DatagramSocket: public Socket
 public:
     DatagramSocket();
     DatagramSocket(uint16_t port_number);
-    string receiveFrom(int buffer_size, HostAddr& client);
+    string receiveFrom(HostAddr& client, int buffer_size = 1024);
     void sendTo(string message, HostAddr &client);
 };
 
@@ -44,7 +44,7 @@ DatagramSocket::DatagramSocket(uint16_t port_number)
  *  
  * Send a HostAddr client by reference to get IP and Port number.
  */
-string DatagramSocket::receiveFrom(int buffer_size, HostAddr &client)
+string DatagramSocket::receiveFrom(HostAddr &client, int buffer_size )
 {
     struct sockaddr_in clientAddr;
     socklen_t len = sizeof(clientAddr);
