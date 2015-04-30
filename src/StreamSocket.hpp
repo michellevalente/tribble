@@ -4,10 +4,13 @@
 #ifndef STREAM_SOCKET_H
 #define STREAM_SOCKET_H
 
+class ServerSocket;
+
 /** \brief Represents a Stream Socket (TCP)
  */
 class StreamSocket: public Socket
 {
+    friend class ServerSocket;
 
 public:
     StreamSocket();
@@ -18,7 +21,6 @@ public:
     unsigned short getPeerPort() const;
     int operator >>( std::string& s ) const;
     const StreamSocket& operator << ( const std::string& s ) const;
-    void changeSocket(int sock);
 };
 
 /** \brief Sends the entire string.
@@ -135,9 +137,5 @@ int StreamSocket::operator>>(std::string& s) const
     return s.size();
 }
 
-void StreamSocket::changeSocket(int sock)
-{
-    c_socket = sock;
-}
 
 #endif

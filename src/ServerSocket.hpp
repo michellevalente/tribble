@@ -42,7 +42,7 @@ StreamSocket ServerSocket::accept()
     StreamSocket socket;
     struct sockaddr_in addr;
     unsigned int addrLen = sizeof(addr); 
-    socket.changeSocket(::accept(c_socket, (struct sockaddr *)&addr, &addrLen)) ;
+    socket.c_socket = ::accept(c_socket, (struct sockaddr *)&addr, &addrLen) ;
 
     return socket;
 }
