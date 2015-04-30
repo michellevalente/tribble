@@ -1,6 +1,7 @@
 #include <system_error>
 #include "Socket.hpp"
 #include "StreamSocket.hpp"
+#include "BufferedSocket.hpp"
 
 #ifndef SERVER_SOCKET_H
 #define SERVER_SOCKET_H
@@ -11,6 +12,7 @@ class ServerSocket: public Socket
 public:
     ServerSocket(uint16_t port_number);
     StreamSocket accept();
+    BufferedSocket acceptBuffered();
     string getPeerAddress() const;
     unsigned short getPeerPort() const;
 };
@@ -42,7 +44,17 @@ StreamSocket ServerSocket::accept()
     StreamSocket socket;
     struct sockaddr_in addr;
     unsigned int addrLen = sizeof(addr); 
-    socket.changeSocket(::accept(c_socket, (struct sockaddr *)&addr, &addrLen)) ;
+    socket.c_socket = ::accept(c_socket, (struct sockaddr *)&addr, &addrLen) ;
+
+    return socket;
+}
+
+BufferedSocket ServerSocket::acceptBuffered()
+{
+    BufferedSocket socket;
+    struct sockaddr_in addr;
+    unsigned int addrLen = sizeof(addr); 
+    socket.c_socket = ::accept(c_socket, (struct sockaddr *)&addr, &addrLen) ;
 
     return socket;
 }
