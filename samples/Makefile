@@ -5,7 +5,7 @@ INCLUDES = -I../src
 
 CXXFLAGS = -g -Wall $(INCLUDES)
 
-executables = date_client echo_server file_exchange_client ip_addr broadcast_server date_server echo_server_buffered file_exchange_server ip_lookup broadcast_server echo_client_buffered echo_server_operators http_sample multicast_receiver echo_client_udp echo_server_udp multicast_sender
+executables = date_client echo_server file_exchange_client ip_addr broadcast_server date_server echo_server_buffered file_exchange_server ip_lookup broadcast_server echo_client_buffered echo_server_operators multicast_receiver echo_client_udp echo_server_udp multicast_sender
 #not compiling yet: 
 #not to be compiled: http_sample
 
