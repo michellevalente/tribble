@@ -30,6 +30,7 @@ public:
         strIpAddr = "";
     }
 
+    // Constructor
     IPAddr(std::string strIP)
     {
         struct addrinfo hint, *res = NULL;
@@ -46,7 +47,7 @@ public:
             throw std::invalid_argument(error_message);
         }
 
-        // Test for ipv4 address 
+        // Test the IP's network
         switch(res->ai_family) {
             case AF_INET:
                 family = IPV4;
@@ -62,7 +63,9 @@ public:
         freeaddrinfo(res);
     }
 
-    /** Returns the EFamily (IPV4 or IPV6) of the IPAddress*/
+    /** \brief Returns the EFamily (IPV4 or IPV6) of the IPAddress
+      * 
+      */
     EFamily getFamily()
     {
         return family;
@@ -102,11 +105,17 @@ public:
         }
     }
 
+    /** \brief Returns IP in string format.
+      * 
+      */
     std::string stringIP()
     {
         return strIpAddr;
     }
 
+    /** \brief Check if the IP address is multicast.
+      * 
+      */
     bool isMulticast()
     {   
         std::istringstream s1(strIpAddr);
