@@ -225,13 +225,13 @@ BufferedSocket& BufferedSocket::getNextLine(std::string& s)
 
 void BufferedSocket::connect(string server, unsigned short port)
 {
-    std::vector<string> ips = dns_lookup( server , 4);
+    std::vector<IPAddr> ips = dns_lookup( server , IPV4);
 
     sockaddr_in servAddr;
     memset(&servAddr, 0, sizeof(servAddr));
 
     servAddr.sin_family = AF_INET;
-    servAddr.sin_addr.s_addr = inet_addr( ips[0].c_str() );
+    servAddr.sin_addr.s_addr = inet_addr( ips[0].stringIP().c_str() );
     servAddr.sin_port = htons(port); 
 
     if( ::connect(c_socket, (sockaddr *) &servAddr, sizeof(servAddr) ) < 0 )

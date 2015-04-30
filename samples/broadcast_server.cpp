@@ -3,17 +3,22 @@
 #include "Broadcast.hpp"
 #include "HostAddr.hpp"
 
+using namespace std;
+
 int main()
 {
 	int port;
 	Broadcast sock;
 	string message;
-	HostAddr broadcast;
+	IPAddr localhost("127.0.0.1");
+	IPAddr broadcastAddr = localhost.generateBroadcast("0.255.255.255");
 
 	std::cout << "Port number: ";
 	std::cin >> port;
 
-	broadcast.setPort(port);
+	HostAddr broadcast(broadcastAddr.stringIP(), port);
+
+
 
 	for(;;)
 	{

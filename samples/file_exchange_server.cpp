@@ -10,9 +10,7 @@ using namespace std;
 int main()
 {
 	string filename;
-	int size;
 
-	FILE * inputFile;
 	ServerSocket socket(PORT);
 
 	cout << "File name: ";

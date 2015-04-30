@@ -1,6 +1,8 @@
 #include <iostream>
 #include "DatagramSocket.hpp"
 
+using namespace std;
+
 int main(int argc, char** argv)
 {
 	DatagramSocket sock;
@@ -13,7 +15,7 @@ int main(int argc, char** argv)
 	{
 		cin >> message;
 		sock.sendTo(string(message), server);
-		cout << "msg: " << sock.receiveFrom(1024, server) << endl;
+		cout << "msg: " << sock.receiveFrom(server, 1024) << endl;
 	}
 
 }

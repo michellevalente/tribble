@@ -10,9 +10,7 @@ int main()
 	string filename, ip;
 	char buffer[1000];
 	int port;
-	int size;
 
-	FILE * inputFile;
 	StreamSocket socket;
 
 	cout << "File name: ";
@@ -31,8 +29,6 @@ int main()
 
 	inputfile.open(filename);
 
-
-	int len = 0;
 
 	while(!inputfile.eof())
 	{

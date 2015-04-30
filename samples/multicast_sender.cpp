@@ -1,12 +1,13 @@
 #include <iostream>
 #include "Multicast.hpp"
 
+using namespace std;
+
 int main()
 {
 	string ip_address;
 	int port;
 	string message;
-	unsigned char ttl;
 
 	cout << "Multicast address: ";
 	cin >> ip_address;

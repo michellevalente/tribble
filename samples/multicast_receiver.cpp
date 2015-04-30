@@ -22,7 +22,7 @@ int main()
 
 	if(multicast_addr.isMulticast()) {
 		socket.joinGroup(multicast_addr);
-		message = socket.receiveFrom(1024, server);
+		message = socket.receiveFrom(server);
 		cout << "Message received: " << message << endl;
 	} else {
 		cout << "IP address is not a multicast address." << endl;
