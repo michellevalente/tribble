@@ -4,6 +4,10 @@
 #ifndef BROADCAST_H
 #define BROADCAST_H
 
+/** \brief Represents a broadcast socket
+ * 
+ * SO_BROADCAST on.
+ */
 class Broadcast : public DatagramSocket
 {
 
@@ -20,6 +24,9 @@ Broadcast::Broadcast() : DatagramSocket()
         throw NetworkException("Could not open broadcast socket.");
 }
 
+/** \brief Sends a string to the broadcast address
+ * 
+ */
 void Broadcast::sendTo(string message, HostAddr &client)
 {
     int length = message.length();
