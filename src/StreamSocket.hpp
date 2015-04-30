@@ -4,6 +4,8 @@
 #ifndef STREAM_SOCKET_H
 #define STREAM_SOCKET_H
 
+/** \brief Represents a Stream Socket (TCP)
+ */
 class StreamSocket: public Socket
 {
 
@@ -12,13 +14,15 @@ public:
     StreamSocket(uint16_t port_number);
     StreamSocket accept();
     void send_all(const string& to_send) const;
+    void send(const string& to_send, int buffer_size);
     string getPeerAddress() const;
     unsigned short getPeerPort() const;
     int operator >>( std::string& s ) const;
     const StreamSocket& operator << ( const std::string& s ) const;
 };
 
-
+/** \brief Sends the entire string.
+ */
 void StreamSocket::send_all(const string& to_send) const
 {
     int length = to_send.length();
@@ -30,6 +34,16 @@ void StreamSocket::send_all(const string& to_send) const
         ptr += i;
         length -= i;
     }
+}
+
+/** \brief Sends part of the string(buffer size).
+ */
+void StreamSocket::send(const string& to_send, int buffer_size)
+{
+    const char * ptr = &to_send[0];
+    int sz = ::send(c_socket, ptr, buffer_size, 0);
+    if(sz < 1)
+        throw NetworkException("Error sending message.", errno);
 }
 
 StreamSocket::StreamSocket()
@@ -60,6 +74,8 @@ StreamSocket::StreamSocket(uint16_t port)
         throw NetworkException("Socket listen failed.", errno);
 }
 
+/** \brief Accepts a new connection.
+ */
 StreamSocket StreamSocket::accept()
 {
     StreamSocket sock;
@@ -70,7 +86,8 @@ StreamSocket StreamSocket::accept()
     return sock;
 }
 
-
+/** \brief Returns the peer's IP.
+ */
 string StreamSocket::getPeerAddress() const
 {
     sockaddr addr;
@@ -84,6 +101,8 @@ string StreamSocket::getPeerAddress() const
     return string(inet_ntoa(((sockaddr_in*) &addr)->sin_addr));
 }
 
+/** \brief Returns the peer's port number.
+ */
 uint16_t StreamSocket::getPeerPort() const
 {
     sockaddr addr;
