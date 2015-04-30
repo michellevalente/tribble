@@ -1,6 +1,8 @@
 #include <iostream>
 #include "DatagramSocket.hpp"
 
+using namespace std;
+
 int main()
 {
    DatagramSocket sock(5000);
