@@ -1,5 +1,8 @@
 #include <DatagramSocket.hpp>
 
+/** \brief Represents a multicast socket
+ *  Allows the socket to join groups and set number of TTLs
+ */
 class Multicast : public DatagramSocket
 {
 
