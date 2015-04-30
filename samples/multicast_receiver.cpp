@@ -1,6 +1,8 @@
 #include <iostream>
 #include "Multicast.hpp"
 
+using namespace std;
+
 int main()
 {
 	string ip_address;
@@ -19,16 +21,12 @@ int main()
 	IPAddr multicast_addr(ip_address);
 
 	if(multicast_addr.isMulticast()) {
-
 		socket.joinGroup(multicast_addr);
-
 		message = socket.receiveFrom(1024, server);
-
 		cout << "Message received: " << message << endl;
-		
-		return 0;
 	} else {
 		cout << "IP address is not a multicast address." << endl;
 	}
 
+	return 0;
 }

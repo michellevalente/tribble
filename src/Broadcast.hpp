@@ -42,9 +42,7 @@ void Broadcast::sendTo(string message, HostAddr &client)
         int i = sendto(c_socket,ptr,length,0,(struct sockaddr *)&broadcast_addr,sizeof(broadcast_addr));
         int tmp = errno;
         if(i < 0) {
-            printf("ERROR: %s , errno %d\n", strerror(tmp), tmp);
-            printf("while sending to port %d\n", client.getPort());
-            throw NetworkException("Send message error.");
+            throw NetworkException("Send message error.", errno);
         }
         
         ptr += i;

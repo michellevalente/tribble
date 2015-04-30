@@ -22,7 +22,7 @@ private:
 public:
 
 	HostAddr(){
-		ip_address = IPAddr("0.0.0.0");
+		ipAddr = IPAddr("0.0.0.0");
 		port = 0;
 	};
 
