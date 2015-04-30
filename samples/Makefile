@@ -11,12 +11,13 @@ executables = broadcast_server echo_client_udp echo_server echo_server_udp ip_ad
 default: $(sources)
 	for file in $(executables) ; do \
 		echo "Compiling $$file.cpp..."; \
-		$(CXX) $(CXXFLAGS) "$$file.cpp" ; \
+		$(CXX) $(CXXFLAGS) $$file.cpp -o $$file; \
     done
 
 .PHONY: clean
 clean:
 	rm -f *~ a.out core $(executables)
+	rm -rf *.dSYM
 
 .PHONY: all
 all: clean default
