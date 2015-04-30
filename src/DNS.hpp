@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <system_error>
+#include "IPAddr.hpp"
 
 #ifndef DNS_H
 #define DNS_H
@@ -15,9 +16,9 @@ using namespace std;
 
 /* Function to translate hostname to ip address. Default ip_version returns 
  * ipv4 and ipv6 addresses */
-vector<string> dns_lookup(const string hostname, int version_ip = 0){
+vector<IPAddr> dns_lookup(const string hostname, int version_ip = 0){
 
-    vector<string> ip; 
+    vector<IPAddr> ip; 
     struct addrinfo hints;
     struct addrinfo *result, *it;
     int s;
@@ -59,9 +60,10 @@ vector<string> dns_lookup(const string hostname, int version_ip = 0){
  
         // convert the IP to a string
         inet_ntop(it->ai_family, ip_address, ip_string, sizeof (ip_string));
+        IPAddr ipAddress(ip_string);
 
         // Put string in the vector
-        ip.push_back(ip_string);
+        ip.push_back(ipAddress);
     }
 
     return ip;

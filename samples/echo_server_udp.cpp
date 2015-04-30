@@ -1,5 +1,6 @@
 #include <iostream>
 #include "DatagramSocket.hpp"
+#include "HostAddr.hpp"
 
 using namespace std;
 
@@ -10,7 +11,7 @@ int main()
    string message;
    
    for(;;) {
-      message = sock.receiveFrom(1024, client);
+      message = sock.receiveFrom( client);
       cout << "msg: " << message << endl;
       sock.sendTo(message, client);
    }

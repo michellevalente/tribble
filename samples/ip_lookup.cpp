@@ -1,12 +1,10 @@
 #include <iostream>
 #include "DNS.hpp"
 
-//TODO: Change strings to HostAddr
-
 int main()
 {
 	string hostname;
-	vector<string> ip;
+	vector<IPAddr> ip;
 
 	cout << "hostname: ";
 	cin >> hostname;
@@ -16,7 +14,7 @@ int main()
 	ip = dns_lookup(hostname, 4);
 
 	for(int i = 0; i < ip.size(); i++){
-		cout << " " << ip[i] << endl;
+		cout << " " << ip[i].stringIP() << endl;
 	}
 
 	cout << "IPV6: \n";
@@ -24,7 +22,7 @@ int main()
 	ip = dns_lookup(hostname, 6);
 	
 	for(int i = 0; i < ip.size(); i++){
-		cout << " " << ip[i] << endl;
+		cout << " " << ip[i].stringIP() << endl;
 	}
 
 }
