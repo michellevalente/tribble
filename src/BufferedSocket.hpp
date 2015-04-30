@@ -14,7 +14,8 @@ public:
     unsigned short getPeerPort() const;
     BufferedSocket& operator >>( std::string& s );
     void send_all(const string& to_send) const;
-    const BufferedSocket& operator << ( const std::string& s ) const;
+    BufferedSocket& operator << ( const std::string& s );
+    void flush();
     void fillBuffer();
     string getNextString();
     BufferedSocket& getNextLine(std::string& s);
@@ -32,6 +33,7 @@ public:
 
 protected:
     std::queue<char> receivedBuffer;
+    std::string toSend;
     bool eof;
 };
 
@@ -84,11 +86,19 @@ uint16_t BufferedSocket::getPeerPort() const
     return ((sockaddr_in*) &addr)->sin_port;
 }
 
-const BufferedSocket& BufferedSocket::operator<<(const std::string& s) const
+
+BufferedSocket& BufferedSocket::operator<<(const std::string& s)
 {
-    send_all(s);
+    toSend+=s;
     return *this;
 }
+
+void BufferedSocket::flush()
+{
+    send_all(toSend);
+    toSend.clear();
+}
+
 
 /*
 #define CHUNK_SIZE 10
@@ -174,6 +184,7 @@ BufferedSocket& BufferedSocket::operator>>(std::string& s)
     s = getNextString();
     return *this;
 }
+
 
 BufferedSocket& BufferedSocket::getNextLine(std::string& s)
 {

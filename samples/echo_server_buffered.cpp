@@ -25,9 +25,20 @@ int main() {
 
         */
 
+        /* 
+
+            Another possible usage: 
+
+            while(sock.getNextLine(rcvd))
+            {
+                cout<<rcvd<<endl;
+            }
+        */
+
         while(sock.getNextLine(rcvd))
         {
-            cout<<rcvd<<endl;
+            sock<<"echoing: "<<rcvd<<"\r\n";
+            sock.flush();
         }
 
 
