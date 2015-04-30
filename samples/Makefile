@@ -5,22 +5,19 @@ INCLUDES = -I../src
 
 CXXFLAGS = -g -Wall $(INCLUDES)
 
-LDFLAGS = -g
-LDLIBS  =
-
 executables = broadcast_server echo_client_udp echo_server echo_server_udp ip_addr ip_lookup
-objects = broadcast_server.o echo_client_udp.o echo_server.o echo_server_udp.o ip_addr.o ip_lookup.o
 
 .PHONY: default
-default: $(executables)
-
-$(executables):
-
-$(objects):
+default: $(sources)
+	for file in $(executables) ; do \
+		echo "Compiling $$file.cpp..."; \
+		$(CXX) $(CXXFLAGS) $$file.cpp -o $$file; \
+    done
 
 .PHONY: clean
 clean:
-	rm -f *~ a.out core $(objects) $(executables)
+	rm -f *~ a.out core $(executables)
+	rm -rf *.dSYM
 
 .PHONY: all
 all: clean default

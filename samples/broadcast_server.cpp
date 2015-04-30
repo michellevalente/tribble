@@ -10,15 +10,15 @@ int main()
 	string message;
 	HostAddr broadcast;
 
-	cout << "Port number: ";
-	cin >> port;
+	std::cout << "Port number: ";
+	std::cin >> port;
 
 	broadcast.setPort(port);
 
 	for(;;)
 	{
-      	cout << "Message: ";
-      	cin >> message;
+      	std::cout << "Message: ";
+      	std::cin >> message;
       	sock.sendTo(message, broadcast);
 	}
 }

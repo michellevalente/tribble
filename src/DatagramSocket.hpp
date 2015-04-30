@@ -84,7 +84,7 @@ void DatagramSocket::sendTo(string message, HostAddr &client)
         int i = ::sendto(c_socket, ptr, length, 0, (struct sockaddr *)&clientAddr, sizeof(clientAddr));
         int _errno = errno;
         if(i < 0) {
-            throw NetworkException("Sending through socket failed", errno);
+            throw NetworkException("Sending through socket failed", _errno);
         }
 
         ptr += i;

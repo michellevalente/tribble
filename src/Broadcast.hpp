@@ -21,7 +21,7 @@ Broadcast::Broadcast() : DatagramSocket()
 {
     int broadcastEnable = 1;
     if( setsockopt(c_socket, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable)))
-        throw NetworkException("Could not open broadcast socket.");
+        throw NetworkException("Could not open broadcast socket.", 0);
 }
 
 /** \brief Sends a string to the broadcast address
@@ -49,7 +49,7 @@ void Broadcast::sendTo(string message, HostAddr &client)
         int i = sendto(c_socket,ptr,length,0,(struct sockaddr *)&broadcast_addr,sizeof(broadcast_addr));
         int tmp = errno;
         if(i < 0) {
-            throw NetworkException("Send message error.", errno);
+            throw NetworkException("Send message error.", tmp);
         }
         
         ptr += i;
