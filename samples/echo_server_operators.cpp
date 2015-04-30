@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../src/tribble.h"
+#include "StreamSocket.hpp"
 
 //using namespace std;
 //using namespace tribble;

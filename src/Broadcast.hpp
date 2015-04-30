@@ -27,7 +27,7 @@ void Broadcast::sendTo(string message, HostAddr &client)
     sockaddr_in broadcast_addr;
     int len;
 
-    if(client.family() == 6)
+    if(client.getFamily() == 6)
         broadcast_addr.sin_family = AF_INET6;
     else
         broadcast_addr.sin_family = AF_INET;

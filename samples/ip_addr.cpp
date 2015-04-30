@@ -4,25 +4,27 @@
 #include <string>
 #include <iostream>
 
-#include "HostAddr.hpp"
+#include "IPAddr.hpp"
 
+using namespace std;
 
 /* Sample program to test if it is a valid ip
  * and calculate broadcast ip. 				
  */
 int main()
 {
-	string ip, mask, broadcastip;
+	string ip, mask;
+	IPAddr broadcastip;
 	int family;
 	
 	cout << "Ip address: ";
 	cin >> ip;
 
-	HostAddr ipAddr(ip);
+	IPAddr ipAddr(ip);
 
-	family = ipAddr.family(); 
+	family = ipAddr.getFamily(); 
 
-	if(family == 4)
+	if(family == IPV4)
 		cout << ip << " is a valid IPV4 address." << endl;
 	else
 		cout << ip << " is a valid IPV4 address." << endl;
@@ -31,5 +33,5 @@ int main()
 	cin >> mask;
 
 	broadcastip = ipAddr.generateBroadcast(mask);
-	cout << "Broadcast IP: " << broadcastip << endl;
+	cout << "Broadcast IP: " << broadcastip.stringIP() << endl;
 }

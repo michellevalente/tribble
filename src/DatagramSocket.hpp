@@ -61,7 +61,7 @@ string DatagramSocket::receiveFrom(int buffer_size, HostAddr &client){
 
     client.setPort(ntohs(clientAddr.sin_port));
     addr = inet_ntoa(clientAddr.sin_addr);
-    client.setIp(string(addr));
+    client.setIP(string(addr));
 
     return str;
 }
@@ -72,7 +72,7 @@ void DatagramSocket::sendTo(string message, HostAddr &client){
     struct sockaddr_in clientAddr;
 
     /* Set up client */
-    if(client.family() == 6)
+    if(client.getFamily() == IPV6)
         clientAddr.sin_family = AF_INET6;
     else
         clientAddr.sin_family = AF_INET;
