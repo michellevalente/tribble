@@ -37,7 +37,7 @@ vector<IPAddr> dns_lookup(const string hostname, EFamily version_ip = ANY){
     s = getaddrinfo(hostname.c_str(), NULL, &hints, &result);
 
     if (s != 0) {
-         throw std::invalid_argument("TODO: change this exception type and description");
+         return ip;
     }
 
     for(it = result;it != NULL; it = it->ai_next) {
