@@ -13,18 +13,20 @@ public:
     void sendTo(string message, HostAddr &client);
 };
 
-DatagramSocket::DatagramSocket() {
+DatagramSocket::DatagramSocket() 
+{
     if ((c_socket = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
         throw std::invalid_argument("Socket error.");
 }  
 
-DatagramSocket::DatagramSocket(uint16_t port_number) {
+DatagramSocket::DatagramSocket(uint16_t port_number) 
+{
     this->port_number = port_number;
 
     if ((c_socket = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
         int tmp = errno;
         printf("ERROR: %s , errno %d\n", strerror(tmp), tmp);
-        throw NetworkException("Socket error.");
+        throw NetworkException("Socket error.", errno);
     }
 
     struct sockaddr_in addr;
@@ -38,7 +40,7 @@ DatagramSocket::DatagramSocket(uint16_t port_number) {
     // int tmp = errno;
     if (tmp < 0) {
         printf("ERROR: %s , errno %d\n", strerror(tmp), tmp);
-        throw NetworkException("Socket error.");
+        throw NetworkException("Socket error.", errno);
     }
 
 }
@@ -92,7 +94,7 @@ void DatagramSocket::sendTo(string message, HostAddr &client){
             printf("while sending to port %d\n", client.getPort());
         }
         if (i < 1)
-            throw NetworkException("Send message error.");
+            throw NetworkException("Send message error.", errno);
         
         ptr += i;
         length -= i;

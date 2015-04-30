@@ -18,12 +18,17 @@ int main()
 
 	IPAddr multicast_addr(ip_address);
 
-	socket.joinGroup(multicast_addr);
+	if(multicast_addr.isMulticast()) {
 
-	message = socket.receiveFrom(1024, server);
+		socket.joinGroup(multicast_addr);
 
-	cout << "Message received: " << message << endl;
-	
-	return 0;
+		message = socket.receiveFrom(1024, server);
+
+		cout << "Message received: " << message << endl;
+		
+		return 0;
+	} else {
+		cout << "IP address is not a multicast address." << endl;
+	}
 
 }

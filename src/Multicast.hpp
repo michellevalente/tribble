@@ -16,7 +16,7 @@ Multicast::Multicast() : DatagramSocket()
 
     // Allow multiple sockets to use the same port number
     if( setsockopt(c_socket,SOL_SOCKET,SO_REUSEADDR,&multicastEnable,sizeof(multicastEnable)) < 0)
-        throw NetworkException("Could not open multicast socket.");
+        throw NetworkException("Could not open multicast socket.", errno);
 }
 
 Multicast::Multicast(uint16_t port) : DatagramSocket(port)
@@ -25,7 +25,7 @@ Multicast::Multicast(uint16_t port) : DatagramSocket(port)
 
     // Allow multiple sockets to use the same port number
     if( setsockopt(c_socket,SOL_SOCKET,SO_REUSEADDR,&multicastEnable,sizeof(multicastEnable)) < 0)
-        throw NetworkException("Could not open multicast socket.");
+        throw NetworkException("Could not open multicast socket.", errno);
 }
 
 void Multicast::joinGroup(IPAddr multicastAddr)
@@ -37,8 +37,7 @@ void Multicast::joinGroup(IPAddr multicastAddr)
 
 	if(setsockopt(c_socket, IPPROTO_IP, IP_ADD_MEMBERSHIP, 
 				  &multicast, sizeof(multicast)) < 0){
-		cout << "ERROR: " << (errno) << endl;
-	throw NetworkException("Join group error.", errno);
+	   throw NetworkException("Join group error.", errno);
 	}
 		
 }
@@ -47,7 +46,7 @@ void Multicast::setTTL(unsigned char TTL)
 {
 	if (setsockopt(c_socket, IPPROTO_IP, IP_MULTICAST_TTL, 
 		           (void *) &TTL, sizeof(TTL)) < 0) 
-    	throw NetworkException("Multicast TTL error");
+    	throw NetworkException("Multicast TTL error", errno);
   
 }
 

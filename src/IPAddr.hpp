@@ -37,7 +37,7 @@ public:
 	    hint.ai_family = PF_UNSPEC;
 	    hint.ai_flags = AI_NUMERICHOST;
 
-	    int error_code = getaddrinfo(strIP.c_str(), NULL, &hint, &res);
+	    int error_code = ::getaddrinfo(strIP.c_str(), NULL, &hint, &res);
 
 	    if (error_code) {
 	    	std::string error_message("Invalid IP address: ");
@@ -50,8 +50,10 @@ public:
 	    switch(res->ai_family) {
 	    	case AF_INET:
 	    		family = IPV4;
+	    		break;
 	    	case AF_INET6:
 	    		family = IPV6;
+	    		break;
 	    	default:
 	    		throw NetworkException("Invalid IP type", 0);
 	    }
@@ -103,6 +105,28 @@ public:
 	std::string stringIP()
 	{
 		return strIpAddr;
+	}
+
+	bool isMulticast()
+	{	
+		std::istringstream s1(strIpAddr);
+		if(family == IPV4) {
+			
+			int ip_int[4];
+			char dot;
+		
+			s1 >> ip_int[0] >> dot >> ip_int[1] >> dot >> ip_int[2] >> dot >> 
+			ip_int[3] >> dot;
+		
+			if(ip_int[0] >= 224 && ip_int[0] <= 239)
+				return true;
+			else
+				return false;
+		}else {
+			throw std::invalid_argument("Multicast function doesn't work for IPV6 addresses.");
+		}
+
+
 	}
 };
 
