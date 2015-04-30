@@ -3,6 +3,9 @@
 #ifndef DATAGRAM_SOCKET_H
 #define DATAGRAM_SOCKET_H
 
+/** \brief Represents a Datagram Socket (UDP)
+ *  
+ */
 class DatagramSocket: public Socket
 {
 
