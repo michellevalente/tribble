@@ -10,6 +10,7 @@
 
 #ifndef DNS_H
 #define DNS_H
+
 using namespace std;
 
 /* Function to translate hostname to ip address. Default ip_version returns 

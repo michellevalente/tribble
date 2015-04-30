@@ -3,7 +3,8 @@
 #include <netdb.h>
 #include <string>
 #include <iostream>
-#include "tribble.h"
+
+#include "HostAddr.hpp"
 
 
 /* Sample program to test if it is a valid ip

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "tribble.h"
+#include "StreamSocket.hpp"
 
 
 int main() {
@@ -9,18 +9,16 @@ int main() {
 
     std::cout << "Listening on port " << port << "\n\n";
 
-    while (true) {
-        StreamSocket sock = wsock.accept();
-        string rcvd;
+    //Serves a single client
+    StreamSocket sock = wsock.accept();
+    string rcvd;
 
-        do {
-            error_code error;
-            rcvd = sock.receive(1024);
-            sock.send_all(rcvd);
-        }
-        while (rcvd.size() > 0);
-        
+    do {
+        error_code error;
+        rcvd = sock.receive(1024);
+        sock.send_all(rcvd);
     }
+    while (rcvd.size() > 0);
 
     return 0;
 }

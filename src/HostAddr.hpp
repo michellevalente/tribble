@@ -3,7 +3,8 @@
 #include <netdb.h>
 #include <string>
 #include <sstream>
-#include "error.hpp"
+#include <string.h>
+#include "Error.hpp"
 
 #ifndef HOSTADDR_H
 #define HOSTADDR_H

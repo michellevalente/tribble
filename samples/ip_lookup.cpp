@@ -1,5 +1,7 @@
 #include <iostream>
-#include "tribble.h"
+#include "DNS.hpp"
+
+//TODO: Change strings to HostAddr
 
 int main()
 {

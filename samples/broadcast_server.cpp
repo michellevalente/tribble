@@ -1,5 +1,7 @@
 #include <iostream>
-#include "tribble.h"
+
+#include "Broadcast.hpp"
+#include "HostAddr.hpp"
 
 int main()
 {
