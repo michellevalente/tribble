@@ -13,6 +13,7 @@ public:
     StreamSocket();
     StreamSocket(uint16_t port_number);
     StreamSocket accept();
+    void connect(HostAddr& peer);
     void send_all(const string& to_send) const;
     void send(const string& to_send, int buffer_size);
     string getPeerAddress() const;
@@ -84,6 +85,25 @@ StreamSocket StreamSocket::accept()
     sock.c_socket = ::accept(c_socket, (struct sockaddr *)&addr, &addrLen);
 
     return sock;
+}
+
+/** \brief Accepts a new connection.
+ */
+void StreamSocket::connect(HostAddr& peer)
+{
+    struct sockaddr_in peerAddr;
+
+    memset(&peerAddr, 0, sizeof(peerAddr));     /* Zero out structure */
+    peerAddr.sin_family      = AF_INET;             /* Internet address family */
+    peerAddr.sin_addr.s_addr = inet_addr(peer.getIp().c_str());   /* Server IP address */
+    peerAddr.sin_port        = htons(peer.getPort()); /* Server port */
+
+    if (::connect(c_socket, (struct sockaddr *) &peerAddr, sizeof(peerAddr)) < 0)
+    {
+        throw NetworkException("Connecting to socket failed.", 0);
+    }
+        
+
 }
 
 /** \brief Returns the peer's IP.

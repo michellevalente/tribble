@@ -15,6 +15,7 @@ class NetworkException : public std::exception
     private:
         int _errno;
         std::string msg;
+        std::string strDetailed;
 
     public:
         /** errno should be the value after the variable of the system
@@ -26,16 +27,18 @@ class NetworkException : public std::exception
         NetworkException(const std::string msg, int _errno):
             _errno(_errno),
             msg(msg)
-        {}
+        {
+            std::ostringstream oss;
+            if (_errno != 0)
+                oss << msg << ":" << strerror(_errno) << " (errno " << _errno << ")";
+            else
+                oss << msg;
+            strDetailed = oss.str();
+        }
 
         virtual const char* what() const throw()
         {
-            std::ostringstream detailed;
-            if (_errno != 0)
-                detailed << msg << ":" << strerror(_errno) << " (errno " << _errno << ")";
-            else
-                detailed << msg;
-            return detailed.str().c_str();
+            return strDetailed.c_str();
         }
 };
 

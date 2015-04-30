@@ -6,6 +6,7 @@
 #include <signal.h>     /* for signal() */
 #include <sys/stat.h>   /* for stat() */
 #include <string.h>     /* for memset() */
+#include <fcntl.h>      /* for fcntl() */
 #include <vector>
 #include <string>
 #include <system_error>
@@ -42,6 +43,7 @@ public:
     }
 
     string receive(int buffer_size);
+    //int select(vector<Socket> readSocket, vector<Socket> writeSocket, struct timeval time );
     void setSendSize(int bytes);
     void setReceiveSize(int bytes);
     int getSendSize();
@@ -49,8 +51,8 @@ public:
     void setSendTimeOut(struct timeval time);
     void setReceiveTimeOut(struct timeval time);
     IPAddr localAddr();
-    //string peerAddr();
     int localPort();
+    void setBlocking(bool blocking);
     
 };
 
@@ -158,5 +160,30 @@ string Socket::receive(int buffer_size)
 
     return str;
 }
+
+void Socket::setBlocking(bool blocking)
+{
+    int op = fcntl(c_socket, F_GETFL, 0);
+
+    if(op == -1)
+        throw NetworkException("Error changing socket blocking mode.", 0);
+
+    if (blocking) {
+        op &= ~O_NONBLOCK; 
+    } else {
+        op |= O_NONBLOCK;
+    }
+
+    if(fcntl(c_socket, F_SETFL, op) == -1)
+    {
+        throw NetworkException("Error changing socket blocking mode.", 0);
+    }
+}
+
+// TO DO
+// int Socket::select(vector<Socket> readSocket, vector<Socket> writeSocket, struct timeval time)
+// {
+
+// }
 
 #endif
