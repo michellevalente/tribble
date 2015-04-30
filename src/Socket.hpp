@@ -54,6 +54,9 @@ public:
     
 };
 
+/** 
+ *  Sets the maximum socket send buffer.
+ */
 void Socket::setSendSize(int bytes)
 {
 
@@ -61,12 +64,18 @@ void Socket::setSendSize(int bytes)
         throw NetworkException("Error setting send buffer size.", errno);
 }
 
+/** 
+ *  Sets the maximum socket receiver buffer.
+ */
 void Socket::setReceiveSize(int bytes)
 {
     if ( setsockopt(c_socket, SOL_SOCKET, SO_RCVBUF, &bytes, sizeof(bytes)) != 0 )
         throw NetworkException("Error setting receive buffer size.", errno);
 }
 
+/** 
+ *  Returns the maximum socket send buffer.
+ */
 int Socket::getSendSize()
 {
     int size;
@@ -77,6 +86,9 @@ int Socket::getSendSize()
     return size;
 }
 
+/** 
+ *  Returns the maximum socket receiver buffer.
+ */
 int Socket::getReceiveSize()
 {
     int size;
@@ -87,18 +99,27 @@ int Socket::getReceiveSize()
     return size;
 }
 
+/**
+ *  Sets the socket send timeout.
+ */
 void Socket::setSendTimeOut(struct timeval t)
 {
     if ( setsockopt(c_socket, SOL_SOCKET, SO_SNDTIMEO, &t, sizeof(t)) != 0 )
         throw NetworkException("Error setting send timeout value.", errno);
 }
 
+/**
+ *  Sets the socket receive timeout.
+ */
 void Socket::setReceiveTimeOut(struct timeval t)
 {
     if ( setsockopt(c_socket, SOL_SOCKET, SO_RCVTIMEO, &t, sizeof(t)) != 0 )
         throw NetworkException("Error setting receive timeout value.", errno);
 }
 
+/**
+ *  Returns the socket local address.
+ */
 IPAddr Socket::localAddr()
 {
     sockaddr_in address;
@@ -111,6 +132,9 @@ IPAddr Socket::localAddr()
     return IPAddr(inet_ntoa(address.sin_addr));
 }
 
+/**
+ *  Returns the socket local port.
+ */
 int Socket::localPort()
 {
     sockaddr_in address;
