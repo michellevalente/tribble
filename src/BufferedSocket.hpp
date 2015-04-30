@@ -1,6 +1,8 @@
 #include <system_error>
 #include <queue>
 #include "Socket.hpp"
+#include "DNS.hpp"
+
 
 #ifndef BUFFERED_SOCKET_H
 #define BUFFERED_SOCKET_H
@@ -20,6 +22,7 @@ public:
     void fillBuffer();
     string getNextString();
     BufferedSocket& getNextLine(std::string& s);
+    void connect(string server, unsigned short port);
 
     void setC_Socket(int s) // @TODO: check if this is ok
     {
@@ -214,6 +217,21 @@ BufferedSocket& BufferedSocket::getNextLine(std::string& s)
     s = nextLine;
 
     return *this;
+}
+
+void BufferedSocket::connect(string server, unsigned short port)
+{
+    std::vector<string> ips = dns_lookup( server , 4);
+
+    sockaddr_in servAddr;
+    memset(&servAddr, 0, sizeof(servAddr));
+
+    servAddr.sin_family = AF_INET;
+    servAddr.sin_addr.s_addr = inet_addr( ips[0].c_str() );
+    servAddr.sin_port = htons(port); 
+
+    if( ::connect(c_socket, (sockaddr *) &servAddr, sizeof(servAddr) ) < 0 )
+        throw NetworkException("Connecting BufferedSocket failed.",0);
 }
 
 
