@@ -26,32 +26,45 @@ public:
 		port = 0;
 	};
 
+	// Constructor
 	HostAddr(std::string ip, uint16_t port_number = 0)
 	{
 		port = port_number;
 		ipAddr = IPAddr(ip);
 	}
 
+	/** \brief Returns the socket IP in string format.
+     */
 	std::string getIp()
 	{
 		return ipAddr.stringIP();
 	}
 
+	/** \brief Returns the socket port number.
+     */
 	uint16_t getPort()
 	{
 		return port;
 	}
 
+	/** \brief Set the IP of the host address.
+	 *	Receives the IP as a string.
+     */
 	void setIP(std::string ip)
 	{
 		ipAddr = IPAddr(ip);
 	}
 
+	/** \brief Sets the port number of the host address.
+     */
 	void setPort(uint16_t port_number)
 	{
 		port = port_number;
 	}
 
+	/** \brief Returns the IP address family.
+     *  Receive the family as a EFamily.
+     */
 	EFamily getFamily()
 	{
 		return ipAddr.getFamily();
