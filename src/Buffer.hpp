@@ -1,6 +1,9 @@
 #include <system_error>
 #include <cstring>
 
+#ifndef BUFFER_H
+#define BUFFER_H
+
 /** \brief Encapsulates a buffer (byte array).
   */
 class Buffer {
@@ -26,6 +29,10 @@ public:
     {
         this->sz = sz;
     }
+    int getSize() const
+    {
+        return sz;
+    }
     void copyTo(void* otherBuffer) const;
     // void addData(void* data, int capacity) const;
     // void copyTo(Buffer buffer) const;
@@ -37,3 +44,5 @@ public:
 void Buffer::copyTo(void* otherBuffer) const {
     memcpy(otherBuffer, buffer, capacity);
 }
+
+#endif

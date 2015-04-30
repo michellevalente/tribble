@@ -1,13 +1,13 @@
 #include <iostream>
 #include <fstream>
 #include "StreamSocket.hpp"
+#include "Buffer.hpp"
 #define PORT 5000
 
 using namespace std;
 
 int main()
 {
-	string buffer;
 	string filename;
 	int size;
 
@@ -17,18 +17,20 @@ int main()
 	cout << "File name: ";
 	cin >> filename;
 
-	std::ofstream out(filename);
+	std::ofstream file(filename, std::ios::binary);
 
 	StreamSocket clientSocket = socket.accept();
 
+	Buffer buffer;
+
 	for(;;)
 	{
-		string buffer;
-		buffer = clientSocket.receive(1024);
-		if(buffer != "")
-			out << buffer;
+		clientSocket.receive(buffer);
+
+		if(buffer.getSize() != 0)
+			file.write((char*) buffer.getArray(), buffer.getSize());
 		else {
-			out.close();
+			file.close();
 			break;
 		}
 

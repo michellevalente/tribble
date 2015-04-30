@@ -20,5 +20,7 @@ int main()
 
 	socket.connect(server);
 
-	cout << socket.receive(1024) << endl;;
+	cout << socket.receive() << endl;
+
+	return 0;
 }
