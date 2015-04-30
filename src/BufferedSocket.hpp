@@ -94,6 +94,7 @@ BufferedSocket& BufferedSocket::operator<<(const std::string& s)
     return *this;
 }
 
+
 string endN()
 {
     return "\n";
@@ -109,6 +110,7 @@ BufferedSocket& BufferedSocket::operator<<( string(*fptr)(void) )
     toSend+=fptr();
     return *this;
 }
+
 
 void BufferedSocket::flush()
 {
@@ -143,7 +145,7 @@ string BufferedSocket::getNextString()
     string nextString = "";
     if(receivedBuffer.size()==0) fillBuffer();
 
-    // discarding any demilitors
+    // discarding any delimitors
     while( !eof && ( receivedBuffer.front()=='\n' || receivedBuffer.front()=='\r' || receivedBuffer.front()==' ' ) )
     {
         receivedBuffer.pop();
@@ -158,9 +160,22 @@ string BufferedSocket::getNextString()
         if(receivedBuffer.size()==0) fillBuffer();
     }
 
+    // discard carriage, if any
+    if( !eof && (receivedBuffer.front()=='\r') )
+    {
+        receivedBuffer.pop();
+        //if(receivedBuffer.size()==0) fillBuffer();
+    }
+
+    // discard new line, if any
+    if( !eof && (receivedBuffer.front()=='\n') )
+    {
+        receivedBuffer.pop();
+        //if(receivedBuffer.size()==0) fillBuffer();
+    }
+
     return nextString;
 }
-
 
 BufferedSocket& BufferedSocket::operator>>(std::string& s)
 {
@@ -174,6 +189,14 @@ BufferedSocket& BufferedSocket::getNextLine(std::string& s)
     string nextLine = "";
     if(receivedBuffer.size()==0) fillBuffer();
 
+    // inserting in nextLine
+    while( !eof && ( receivedBuffer.front()!='\n' && receivedBuffer.front()!='\r' ) ) 
+    {                                                                                    
+        nextLine+=receivedBuffer.front();
+        receivedBuffer.pop();
+        if(receivedBuffer.size()==0) fillBuffer();
+    }
+
     // discarding carriage demilitors
     while( !eof && receivedBuffer.front()=='\r' )
     {
@@ -185,20 +208,14 @@ BufferedSocket& BufferedSocket::getNextLine(std::string& s)
     if( !eof && receivedBuffer.front()=='\n')
     {
         receivedBuffer.pop();
-        if(receivedBuffer.size()==0) fillBuffer();
-    }
-
-    // inserting in nextLine
-    while( !eof && ( receivedBuffer.front()!='\n' && receivedBuffer.front()!='\r' ) ) 
-    {                                                                                    
-        nextLine+=receivedBuffer.front();
-        receivedBuffer.pop();
-        if(receivedBuffer.size()==0) fillBuffer();
+        //if(receivedBuffer.size()==0) fillBuffer();
     }
 
     s = nextLine;
 
     return *this;
 }
+
+
 
 #endif

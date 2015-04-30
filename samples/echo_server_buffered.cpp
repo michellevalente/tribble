@@ -16,30 +16,36 @@ int main() {
 
         string rcvd;
 
-        /*
-
-            One possible usage: (word by word)
+        
+        
+            //One possible usage: (word by word)
 
             while(sock>>rcvd)
-                cout<<"["<<rcvd<<"]"<<endl;
+            {
+                sock << "echoing: " << rcvd << endRN;
+                sock.flush();
+            }
+        
+        
 
-        */
+        /*
 
-        /* 
-
-            Another possible usage: 
+            //Another possible usage: 
 
             while(sock.getNextLine(rcvd))
             {
-                cout<<rcvd<<endl;
+                sock << "echoing: " << rcvd << endRN;
+                sock.flush();
             }
-        */
-
+        
+        
         while(sock.getNextLine(rcvd))
         {
             sock << "echoing: " << rcvd << endRN;
             sock.flush();
         }
+
+        */
 
 
     }
