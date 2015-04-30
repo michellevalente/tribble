@@ -13,8 +13,9 @@ public:
     string getPeerAddress() const;
     unsigned short getPeerPort() const;
     BufferedSocket& operator >>( std::string& s );
-    void send_all(const string& to_send) const;
+    void sendAll(const string& to_send) const;
     BufferedSocket& operator << ( const std::string& s );
+    BufferedSocket& operator<<( string(*fptr)(void) );
     void flush();
     void fillBuffer();
     string getNextString();
@@ -38,7 +39,7 @@ protected:
 };
 
 
-void BufferedSocket::send_all(const string& to_send) const
+void BufferedSocket::sendAll(const string& to_send) const
 {
     int length = to_send.length();
     const char *ptr = &to_send[0];
@@ -93,47 +94,29 @@ BufferedSocket& BufferedSocket::operator<<(const std::string& s)
     return *this;
 }
 
+string endN()
+{
+    return "\n";
+}
+
+string endRN()
+{
+    return "\r\n";
+}
+
+BufferedSocket& BufferedSocket::operator<<( string(*fptr)(void) )
+{
+    toSend+=fptr();
+    return *this;
+}
+
 void BufferedSocket::flush()
 {
-    send_all(toSend);
+    sendAll(toSend);
     toSend.clear();
 }
 
-
-/*
-#define CHUNK_SIZE 10
-
-int BufferedSocket::operator>>(std::string& s) const
-{
-    char *chunking = new char[CHUNK_SIZE];
-    int chunked;
-
-    s = "";
-
-    do {
-        chunked = recv( c_socket, chunking, CHUNK_SIZE, 0 );
-
-        if(chunked<0) {
-            int _errno = errno;
-            delete [] chunking;
-            throw NetworkException("Receiving from socket failed", _errno);
-        }
-
-        if(chunked>0) {
-            s.insert( s.size() , chunking , chunked );
-        }
-    }
-    while(chunked > 0); // zero indicates end of connection (ctrl-D)
-
-    delete [] chunking;
-    return s.size();
-}
-*/
-
-
-
-
-#define FILLING_SIZE 10
+#define FILLING_SIZE 100
 
 void BufferedSocket::fillBuffer()
 {

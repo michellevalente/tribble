@@ -37,7 +37,7 @@ int main() {
 
         while(sock.getNextLine(rcvd))
         {
-            sock<<"echoing: "<<rcvd<<"\r\n";
+            sock << "echoing: " << rcvd << endRN;
             sock.flush();
         }
 
