@@ -1,0 +1,4 @@
+file(GLOB_RECURSE INCS "*.hpp")
+
+add_library(tribbleLib ${INCS})
+SET_TARGET_PROPERTIES(tribbleLib PROPERTIES LINKER_LANGUAGE C)

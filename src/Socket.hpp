@@ -27,15 +27,13 @@ using std::string;
 class Socket 
 {
 protected:
-    int MAXPENDING;
+    int MAXPENDING = 10;
     int c_socket;
     int port_number;
+    int refCount;
 
 public:
-    Socket()
-    {
-        MAXPENDING = 10;
-    }
+    Socket() {}
 
     ~Socket()
     {
@@ -192,6 +190,7 @@ void Socket::setBlocking(bool blocking)
         throw NetworkException("Error changing socket blocking mode.", 0);
     }
 }
+
 
 // TO DO
 // int Socket::select(vector<Socket> readSocket, vector<Socket> writeSocket, struct timeval time)
